@@ -1,0 +1,22 @@
+.env
+
+# Local .terraform directories
+**/.terraform/*
+proxmox/.terraform.lock.hcl
+
+# .tfstate files
+proxmox/*.tfstate
+proxmox/*.tfstate.*
+
+# Crash log files
+proxmox/crash.log
+proxmox/crash.*.log
+
+proxmox/*.tfvars
+proxmox/*.tfvars.json
+
+
+proxmox/override.tf
+proxmox/override.tf.json
+proxmox/*_override.tf
+proxmox/*_override.tf.json
