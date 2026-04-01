@@ -64,17 +64,17 @@ client:
     # PostgreSQL authentication backend
     # Requires database initialization with Guacamole schema before use
     postgresql:
-      enabled: false
+      enabled: true
       # POSTGRESQL_HOSTNAME: Hostname of PostgreSQL server (required if not using Docker links)
-      hostname: 
+      hostname: "postgres-postgresql"
       # POSTGRESQL_PORT: Port for PostgreSQL connection (optional, default: 5432)
-      port: ""
+      port: "5432"
       # POSTGRESQL_DATABASE: Name of the database to use for Guacamole authentication (required)
-      database: ""
+      database: "guac-auth"
       # POSTGRESQL_USERNAME: User that Guacamole will use to connect to PostgreSQL (required)
-      username: ""
+      username: "postgres"
       # POSTGRESQL_PASSWORD: Password for PostgreSQL user (required)
-      password: ""
+      password: "postgres"
       
       # Optional configuration for connection limits and behavior
       # POSTGRESQL_ABSOLUTE_MAX_CONNECTIONS: Absolute maximum concurrent connections across all users (0 = unlimited)
@@ -543,7 +543,6 @@ client:
   #   command: ['sh', '-c', 'echo "Waiting for database..." && sleep 10']
   # - name: init-config
   #   image: busybox:1.36
-  #   command: ['sh', '-c', 'cp /config/* /shared/']
   #   volumeMounts:
   #     - name: config
   #       mountPath: /config
@@ -578,12 +577,12 @@ guacd:
   
   # Resource limits and requests for the guacd container
   resources: {}
-    # limits:
-    #   cpu: 500m
-    #   memory: 512Mi
-    # requests:
-    #   cpu: 250m
-    #   memory: 256Mi
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 250m
+  #    memory: 256Mi
   
   # Health check probes for the guacd container
   # TCP socket probes check connectivity to the guacd port
@@ -601,9 +600,9 @@ guacd:
   # Horizontal Pod Autoscaler configuration for guacd
   # Note: Lower max replicas than client as guacd is typically less resource intensive
   autoscaling:
-    enabled: false
+    enabled: true
     minReplicas: 1
-    maxReplicas: 3
+    maxReplicas: 2
     targetCPUUtilizationPercentage: 80
   
   # Log level configuration for guacd
@@ -611,7 +610,7 @@ guacd:
   # Available levels: error, warn, info, debug, trace
   # Leave empty to use guacd default
   # More information: https://guacamole.apache.org/doc/gug/configuring-guacamole.html#guacd-logging
-  logLevel: ""
+  logLevel: "warn"
   
   # Environment variables from ConfigMaps and Secrets
   # Used to load environment variables from external ConfigMaps and Secrets
@@ -675,7 +674,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: "kube-guac"
 
 # Pod annotations for both client and guacd pods
 # More information: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
