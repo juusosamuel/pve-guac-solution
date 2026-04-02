@@ -4,28 +4,12 @@ locals {
   }
   selected_profile = local.vm_profiles[var.instance_type]
 
-  # Luodaan lista tageista. compact() poistaa tyhjät merkkijonot ("").
-  # 'base-research' lisätään aina oletuksena kaikille koneille.
-  tag_list = compact([
-    "base-research",
-    var.install_rstudio ? "app-rstudio" : "",
-    var.install_python ? "app-python" : ""
-  ])
-
-  # Yhdistetään lista yhdeksi pilkulla erotetuksi stringiksi Landscapea varten
-  landscape_tags = join(",", local.tag_list)
 }
 
 resource "proxmox_virtual_environment_vm" "this" {
   name      = var.vm_name
-  node_name = "tfepve"
+  node_name = "pve"
   started   = true
-
-  agent { enabled = true }
-
-  clone {
-    vm_id = 100
-  }
 
   cpu {
     cores = local.selected_profile.cpu
@@ -39,7 +23,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   disk {
     datastore_id = "local-lvm"
     interface    = "scsi0"
-    size         = 70
+    size         = "20G"
     file_format  = "raw"
     discard      = "on"
   }
@@ -60,7 +44,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 resource "proxmox_virtual_environment_file" "cloud_config" {
   content_type = "snippets"
   datastore_id = "local"
-  node_name    = "tfepve"
+  node_name    = "pve"
 
   source_raw {
     data = templatefile("${path.module}/cloud-init.tftpl", {
@@ -69,12 +53,6 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
     })
     file_name = "cloud-config-${var.vm_name}.yaml"
   }
-}
-
-resource "guacamole_connection_group" "labra" {
-  name              = "Labra-${var.vm_name}"
-  parent_identifier = "ROOT"
-  type              = "ORGANIZATIONAL"
 }
 
 resource "guacamole_connection_rdp" "rdp_yhteys" {
@@ -93,3 +71,25 @@ resource "guacamole_connection_rdp" "rdp_yhteys" {
     color_depth     = "24"
   }
 }
+
+resource "xenserver_vm" "this" {
+  name_label       = "${var.vm_name}-${var.instance_type}"
+  name_description = "Terraform provision VM"
+  template_name    = local.selected_profile.base_image
+  static_mem_max   = local.selected_profile.memory * 1024 * 1024 * 1024
+  vcpus            = local.selected_profile.cpu
+  cores_per_socket = local.selected_profile.cpu
+  check_ip_timeout = 300
+  boot_mode        = local.selected_profile.boot_mode
+  cdrom = null 
+
+  network_interface {
+    network_uuid = data.xenserver_network.network.data_items[0].uuid
+    device       = "0"
+  }
+
+  other_config = {
+    "tf_created" = "true",
+  }
+}
+

@@ -1,25 +1,17 @@
 terraform {
-  required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "~> 0.70" 
+    required_providers {
+        proxmox = {
+            source = "telmate/proxmox"
+        }
+        guacamole = {
+            source = "desotech/guacamole"
+        }
     }
-    guacamole = {
-      source  = "techBeck03/guacamole"
-      version = "~> 1.4.0"
-    }
-  }
 }
 
 provider "proxmox" {
-  ssh {
-    agent = true
-  }
-}
-
-provider "guacamole" {
-  url                      = var.guacamole_url
-  username                 = var.guacamole_username
-  password                 = var.guacamole_password
-  disable_tls_verification = true
+    pm_api_url          = var.proxmox_api_url
+    pm_api_token_id     = var.proxmox_api_token_id
+    pm_api_token_secret = var.proxmox_api_token_secret
+    pm_tls_insecure     = true
 }
