@@ -259,7 +259,7 @@ client:
       # SAML_COMPRESS_RESPONSE: Request compressed responses from IdP (true/false, default: true)
       compressResponse: ""
       # SAML_GROUP_ATTRIBUTE: Attribute name containing group memberships (default: "groups")
-      groupAttribute: "samlAssertionMemberOf"
+      groupAttribute: "http://schemas.xmlsoap.org/claims/Group"
       # SAML_DEBUG: Enable verbose logging for debugging (true/false, default: false)
       debug: "true"
 
