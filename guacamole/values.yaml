@@ -241,15 +241,15 @@ client:
     # SAML authentication
     # Single Sign-On authentication with SAML Identity Providers
     saml:
-      enabled: false
+      enabled: true
       # SAML_IDP_METADATA_URL: URI of SAML IdP metadata file (local file or remote URL)
-      idpMetadataUrl: ""
+      idpMetadataUrl: ${SAML_IDP_METADATA_URL}
       # SAML_IDP_URL: URL of Identity Provider for user redirection (required if not in metadata)
-      idpUrl: ""
+      idpUrl: ${SAML_IDP_URL}
       # SAML_ENTITY_ID: SAML Entity Identifier for this Guacamole instance (required if not in metadata)
-      entityId: ""
+      entityId: ${SAML_ENTITY_ID}
       # SAML_CALLBACK_URL: Callback URL for IdP to redirect users back to Guacamole (required if not in metadata)
-      callbackUrl: ""
+      callbackUrl: ${SAML_CALLBACK_URL}
       
       # Optional SAML configuration
       # SAML_STRICT: Enable strict security checks on servers and certificates (true/false, default: true)
@@ -259,9 +259,9 @@ client:
       # SAML_COMPRESS_RESPONSE: Request compressed responses from IdP (true/false, default: true)
       compressResponse: ""
       # SAML_GROUP_ATTRIBUTE: Attribute name containing group memberships (default: "groups")
-      groupAttribute: ""
+      groupAttribute: "samlAssertionMemberOf"
       # SAML_DEBUG: Enable verbose logging for debugging (true/false, default: false)
-      debug: ""
+      debug: "true"
 
     # TOTP (Time-based One-Time Password) authentication
     # Two-factor authentication using authenticator applications
@@ -512,7 +512,7 @@ client:
     # EXTENSION_PRIORITY: Comma-separated list of extension namespaces in load order
     # Use "*" to represent all unlisted extensions
     # Example: "saml, *, postgresql" loads SAML first, then others, then PostgreSQL last
-    order: ""
+    order: "*, saml"
 
   # History Recording Storage Extension
   # Enables viewing historical session recordings from within the Guacamole web interface
@@ -523,7 +523,7 @@ client:
     searchPath: ""
 
   # Node selector for client pod assignment
-  # More information: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # More information: https://kubernetes.io/docs/concepts/schedulinfg-eviction/assign-pod-node/
   nodeSelector: {}
 
   # Tolerations for client pod assignment
