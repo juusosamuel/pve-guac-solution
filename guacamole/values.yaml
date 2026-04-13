@@ -74,7 +74,7 @@ client:
       # POSTGRESQL_USERNAME: User that Guacamole will use to connect to PostgreSQL (required)
       username: "postgres"
       # POSTGRESQL_PASSWORD: Password for PostgreSQL user (required)
-      password: "postgres"
+      password: ${POSTGRESQL_PASSWORD}
       
       # Optional configuration for connection limits and behavior
       # POSTGRESQL_ABSOLUTE_MAX_CONNECTIONS: Absolute maximum concurrent connections across all users (0 = unlimited)
@@ -412,7 +412,7 @@ client:
     # Name of ConfigMap containing environment variables
     configMap: ""
     # Name of Secret containing environment variables
-    secret: "guacamole-saml-metadata"
+    secret: "guacamole-saml-metadata", "guacamole-pg-secret"
   
   # Additional environment variables for the client container
   # Use this to set custom environment variables not covered by the auth sections above
