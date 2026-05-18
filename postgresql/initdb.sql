@@ -791,3 +791,30 @@ JOIN guacamole_entity          ON permissions.username = guacamole_entity.name A
 JOIN guacamole_entity affected ON permissions.affected_username = affected.name AND guacamole_entity.type = 'USER'
 JOIN guacamole_user            ON guacamole_user.entity_id = affected.entity_id;
 
+
+-- create a trigger function that adds READ permissions to every member of a connection group where a new connection is added
+CREATE FUNCTION auto_inherit_connection_perms()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- only executed if the connection was placed inside a specific group/folder
+    IF NEW.parent_id IS NOT NULL THEN
+        
+        -- for every entity (User or User Group) that has permissions on the group/folder,
+        -- copy permissions to this new connection.
+        INSERT INTO guacamole_connection_permission (entity_id, connection_id, permission)
+        SELECT entity_id, NEW.connection_id, permission
+        FROM guacamole_connection_group_permission
+        WHERE connection_group_id = NEW.parent_id
+        ON CONFLICT DO NOTHING; -- ignore if already exists
+        
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_auto_inherit_perms
+AFTER INSERT ON guacamole_connection
+FOR EACH ROW
+EXECUTE FUNCTION auto_inherit_connection_perms();
+
