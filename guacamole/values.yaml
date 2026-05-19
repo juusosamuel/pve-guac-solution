@@ -473,7 +473,7 @@ client:
     # Options: "error", "warn", "info", "debug", "trace" (in order of increasing verbosity)
     # Default: "info" - provides reasonable detail without excessive verbosity
     # Can also be configured via logback.xml file for greater flexibility
-    level: ""
+    level: "debug"
 
   # Authentication provider configuration
   # Controls behavior when authentication providers fail
