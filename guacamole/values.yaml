@@ -17,7 +17,7 @@ client:
     # Image pull policy - IfNotPresent, Always, or Never
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion
-    tag: ""
+    tag: "latest"
   
   # Service configuration for the Guacamole client
   # Exposes the web application on port 8080
@@ -70,7 +70,7 @@ client:
       # POSTGRESQL_PORT: Port for PostgreSQL connection (optional, default: 5432)
       port: "5432"
       # POSTGRESQL_DATABASE: Name of the database to use for Guacamole authentication (required)
-      database: ""
+      database: "guacamole"
       # POSTGRESQL_USERNAME: User that Guacamole will use to connect to PostgreSQL (required)
       username: ""
       # POSTGRESQL_PASSWORD: Password for PostgreSQL user (required)
@@ -253,7 +253,7 @@ client:
       
       # Optional SAML configuration
       # SAML_STRICT: Enable strict security checks on servers and certificates (true/false, default: true)
-      strict: "false"
+      strict: "true"
       # SAML_COMPRESS_REQUEST: Enable compression on requests to IdP (true/false, default: true)
       compressRequest: "true"
       # SAML_COMPRESS_RESPONSE: Request compressed responses from IdP (true/false, default: true)
@@ -414,15 +414,21 @@ client:
     # Name of Secret containing environment variables
     secret: 
       - "guacamole-saml-metadata"
-      - "guacamole-pg-secret"
+      - "app-db-passwords"
   
   # Additional environment variables for the client container
   # Use this to set custom environment variables not covered by the auth sections above
   extraEnv: []
-  # - name: CUSTOM_VAR
-  #   value: "custom-value"
-  # - name: ANOTHER_VAR
-  #   value: "another-value"
+    - name: POSTGRESQL_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: guacamole-postgres-password
+    - name: POSTGRESQL_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: guacamole-postgres-username      
 
   # Brute-force authentication detection (available since Guacamole 1.6.0)
   # Detects and blocks brute-force login attacks by tracking failed authentication attempts

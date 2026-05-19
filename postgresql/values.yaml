@@ -179,14 +179,14 @@ auth:
   metricsPassword: ""
   ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
   ##
-  existingSecret: ""
+  existingSecret: "app-db-passwords"
   ## @param auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ## @param auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ## @param auth.secretKeys.metricsPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ##
   secretKeys:
-    adminPasswordKey: postgres-password
+    adminPasswordKey: postgres-admin-password
     userPasswordKey: password
     replicationPasswordKey: replication-password
     metricsPasswordKey: metrics-password
@@ -370,7 +370,25 @@ primary:
     ##      #!/bin/sh
     ##      echo "Do something."
     ##
-    scripts: {}
+    scripts:
+      01-create-dbs.sh: |
+        #!/bin/bash
+        set -e
+        
+        # Execute SQL as the postgres admin user
+        psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+            CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
+            CREATE DATABASE authentik OWNER authentik;
+            
+            CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
+            CREATE DATABASE guacamole OWNER guacamole;
+        EOSQL
+
+      02-init-guac.sh: |
+        #!/bin/bash
+        set -e
+        psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "guacamole" -f /custom-init/initdb.sql
+  
     ## @param primary.initdb.scriptsConfigMap ConfigMap with scripts to be run at first boot
     ## NOTE: This will override `primary.initdb.scripts`
     ##
@@ -419,7 +437,17 @@ primary:
   ##   - name: FOO
   ##     value: "bar"
   ##
-  extraEnvVars: []
+  extraEnvVars:
+    - name: AUTHENTIK_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: authentik-postgres-password
+    - name: GUACAMOLE_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: guacamole-postgres-password      
   ## @param primary.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for PostgreSQL Primary nodes
   ##
   extraEnvVarsCM: ""
@@ -640,12 +668,17 @@ primary:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate: {}
-  ## @param primary.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the PostgreSQL Primary container(s)
-  ##
-  extraVolumeMounts: []
   ## @param primary.extraVolumes Optionally specify extra list of additional volumes for the PostgreSQL Primary pod(s)
   ##
-  extraVolumes: []
+  extraVolumes:
+    - name: guac-init-schema-vol
+      configMap:
+        name: guac-schema-configmap      
+  ## @param primary.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the PostgreSQL Primary container(s)
+  ##
+  extraVolumeMounts:
+    - name: guac-init-schema-vol
+      mountPath: /custom-init  
   ## @param primary.sidecars Add additional sidecar containers to the PostgreSQL Primary pod(s)
   ## For example:
   ## sidecars:
@@ -1745,7 +1778,7 @@ psp:
 metrics:
   ## @param metrics.enabled Start a prometheus exporter
   ##
-  enabled: false
+  enabled: true
   ## @param metrics.image.registry [default: REGISTRY_NAME] PostgreSQL Prometheus Exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/postgres-exporter] PostgreSQL Prometheus Exporter image repository
   ## @skip metrics.image.tag PostgreSQL Prometheus Exporter image tag (immutable tags are recommended)
@@ -1926,7 +1959,7 @@ metrics:
   serviceMonitor:
     ## @param metrics.serviceMonitor.enabled Create ServiceMonitor Resource for scraping metrics using Prometheus Operator
     ##
-    enabled: false
+    enabled: true
     ## @param metrics.serviceMonitor.namespace Namespace for the ServiceMonitor Resource (defaults to the Release Namespace)
     ##
     namespace: ""
