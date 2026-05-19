@@ -187,9 +187,9 @@ auth:
   ##
   secretKeys:
     adminPasswordKey: postgres-admin-password
-    userPasswordKey: password
-    replicationPasswordKey: replication-password
-    metricsPasswordKey: metrics-password
+    #userPasswordKey: user-password
+    #replicationPasswordKey: replication-password
+    #metricsPasswordKey: metrics-password
   ## @param auth.usePasswordFiles Mount credentials as a files instead of using an environment variable
   ##
   usePasswordFiles: true
