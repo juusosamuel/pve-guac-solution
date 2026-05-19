@@ -438,6 +438,11 @@ primary:
   ##     value: "bar"
   ##
   extraEnvVars:
+    - name: PGPASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: postgres-admin-password
     - name: AUTHENTIK_DB_PASSWORD
       valueFrom:
         secretKeyRef:
@@ -998,3 +1003,4 @@ readReplicas:
   ## @param readReplicas.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
+[...]
