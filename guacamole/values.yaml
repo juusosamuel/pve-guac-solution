@@ -611,7 +611,7 @@ guacd:
   # Available levels: error, warn, info, debug, trace
   # Leave empty to use guacd default
   # More information: https://guacamole.apache.org/doc/gug/configuring-guacamole.html#guacd-logging
-  logLevel: "warn"
+  logLevel: "debug"
   
   # Environment variables from ConfigMaps and Secrets
   # Used to load environment variables from external ConfigMaps and Secrets
