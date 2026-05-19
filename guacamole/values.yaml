@@ -423,12 +423,7 @@ client:
       valueFrom:
         secretKeyRef:
           name: app-db-passwords
-          key: guacamole-postgres-password
-    - name: POSTGRESQL_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: app-db-passwords
-          key: guacamole-postgres-username      
+          key: guacamole-postgres-password   
 
   # Brute-force authentication detection (available since Guacamole 1.6.0)
   # Detects and blocks brute-force login attacks by tracking failed authentication attempts
