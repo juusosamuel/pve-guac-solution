@@ -128,9 +128,6 @@ global:
   envFrom: []
     # - configMapRef:
     #     name: config-map-name
-    - secretRef:
-      name: authentik-secret
-
   # -- Additional volumeMounts to all deployed Deployments. Does not apply to GeoIP
   # @default -- `[]` (See [values.yaml])
   volumeMounts: []
@@ -153,7 +150,7 @@ authentik:
   log_level: info
   # -- Secret key used for cookie singing and unique user IDs,
   # don't change this after the first install
-  secret_key: ""
+  secret_key: ${AUTHENTIK_SECRET_KEY}
   ## use existing secret for authentik configuration instead of creating one
   ## WARNING: when set, authentik.* secret values are ignored
   existingSecret:
@@ -309,7 +306,12 @@ server:
       valueFrom:
         secretKeyRef:
           name: app-db-passwords
-          key: authentik-postgres-password  
+          key: authentik-postgres-password
+    - name: AUTHENTIK_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: authentik-secret
+          key: authentic-seret        
     # - name: AUTHENTIK_VAR_NAME
     #   value: VALUE
     # - name: AUTHENTIK_VAR_OTHER
