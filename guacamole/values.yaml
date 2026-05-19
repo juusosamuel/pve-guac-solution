@@ -72,7 +72,7 @@ client:
       # POSTGRESQL_DATABASE: Name of the database to use for Guacamole authentication (required)
       database: "guacamole"
       # POSTGRESQL_USERNAME: User that Guacamole will use to connect to PostgreSQL (required)
-      username: ""
+      username: "guacamole"
       # POSTGRESQL_PASSWORD: Password for PostgreSQL user (required)
       password: ""
       

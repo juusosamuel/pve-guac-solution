@@ -111,14 +111,12 @@ global:
   # -- Environment variables to pass to all deployed Deployments. Does not apply to GeoIP
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
-  env: []
-    # - name: AUTHENTIK_VAR_NAME
-    #   value: VALUE
-    # - name: AUTHENTIK_VAR_OTHER
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: secret-name
-    #       key: secret-key
+  env:
+    - name: AUTHENTIK_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: authentik-postgres-password
     # - name: AUTHENTIK_VAR_ANOTHER
     #   valueFrom:
     #     configMapKeyRef:
@@ -213,7 +211,7 @@ authentik:
     # @default -- `authentik`
     user: "authentik"
     # -- postgresql password
-    password: ""
+    password: ${AUTHENTIK_DB_PASSWORD}
     # -- postgresql port
     port: 5432
 
@@ -306,7 +304,12 @@ server:
   # -- Environment variables to pass to the authentik server. Does not apply to GeoIP
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
-  env: []
+  env:
+    - name: AUTHENTIK_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: authentik-postgres-password  
     # - name: AUTHENTIK_VAR_NAME
     #   value: VALUE
     # - name: AUTHENTIK_VAR_OTHER
@@ -738,8 +741,11 @@ worker:
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
   env: []
-    # - name: AUTHENTIK_VAR_NAME
-    #   value: VALUE
+    - name: AUTHENTIK_DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-db-passwords
+          key: authentik-postgres-password
     # - name: AUTHENTIK_VAR_OTHER
     #   valueFrom:
     #     secretKeyRef:
