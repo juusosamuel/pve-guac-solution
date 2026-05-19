@@ -495,7 +495,7 @@ client:
   # Configures Tomcat's RemoteIpValve to correctly determine user IP addresses
   proxy:
     # REMOTE_IP_VALVE_ENABLED: Enable Tomcat's RemoteIpValve (required to enable proxy support)
-    enabled: false
+    enabled: true
     
     # Optional proxy configuration (default values are correct for most deployments)
     # PROXY_ALLOWED_IPS_REGEX: Regex matching trusted proxy IP addresses (Java Pattern format)
@@ -710,20 +710,19 @@ securityContext: {}
 # Only applies to the client service - guacd should not be exposed externally
 # More information: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
+  className: "traefik"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
   hosts:
-    - host: chart-example.local
+    - host: guacamole.k3s.fi
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: guacamole-tls-secret
+      hosts:
+        - guacamole.k3s.fi
 
 # -- Expose the guacamole client via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
