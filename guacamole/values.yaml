@@ -488,7 +488,7 @@ client:
   # Configures Tomcat's RemoteIpValve to correctly determine user IP addresses
   proxy:
     # REMOTE_IP_VALVE_ENABLED: Enable Tomcat's RemoteIpValve (required to enable proxy support)
-    enabled: true
+    enabled: false
     
     # Optional proxy configuration (default values are correct for most deployments)
     # PROXY_ALLOWED_IPS_REGEX: Regex matching trusted proxy IP addresses (Java Pattern format)
@@ -703,7 +703,7 @@ securityContext: {}
 # Only applies to the client service - guacd should not be exposed externally
 # More information: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: true
+  enabled: false
   className: "traefik"
   annotations:
     cert-manager.io/cluster-issuer: "selfsigned-issuer"
