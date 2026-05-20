@@ -241,7 +241,7 @@ client:
     # SAML authentication
     # Single Sign-On authentication with SAML Identity Providers
     saml:
-      enabled: true
+      enabled: false
       # SAML_IDP_METADATA_URL: URI of SAML IdP metadata file (local file or remote URL)
       idpMetadataUrl: ""
       # SAML_IDP_URL: URL of Identity Provider for user redirection (required if not in metadata)
@@ -412,7 +412,7 @@ client:
     # Name of ConfigMap containing environment variables
     configMap: ""
     # Name of Secret containing environment variables
-    secret: "guacamole-saml-metadata"
+    secret: ""
   
   # Additional environment variables for the client container
   # Use this to set custom environment variables not covered by the auth sections above
