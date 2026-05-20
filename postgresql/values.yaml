@@ -376,7 +376,7 @@ primary:
         set -e
         
         # Execute SQL as the postgres admin user
-        psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "postgres" <<-EOSQL
+        psql -v --username "postgres" --dbname "postgres" <<-EOSQL
             CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
             CREATE DATABASE authentik OWNER authentik;
             
