@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/juusosamuel/pve-guac-solution
+      targetRevision: main
+      ref: values
+    - repoURL: https://charts.goauthentik.io
+      chart: authentik
+      targetRevision: "2026.2.3"
+      helm:
+        valueFiles:
+          - $values/authentik/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

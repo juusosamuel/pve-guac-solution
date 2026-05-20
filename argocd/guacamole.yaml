@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guacamole
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/juusosamuel/pve-guac-solution
+      targetRevision: main
+      ref: values                          
+    - repoURL: https://dmunozv04.github.io/helm-guacamole
+      chart: guacamole
+      targetRevision: 0.3.2
+      helm:
+        valueFiles:
+          - $values/guacamole/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
