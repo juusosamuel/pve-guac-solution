@@ -377,10 +377,10 @@ primary:
         
         # Execute SQL as the postgres admin user
         psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "postgres" <<-EOSQL
-            CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
+            CREATE USER IF NOT EXISTS authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
             CREATE DATABASE authentik OWNER authentik;
             
-            CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
+            CREATE USER IF NOT EXISTS guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
             CREATE DATABASE guacamole OWNER guacamole;
         EOSQL
 
