@@ -195,17 +195,17 @@ authentik:
     # -- set the postgresql hostname to talk to
     # if unset and .Values.postgresql.enabled == true, will generate the default
     # @default -- `{{ .Release.Name }}-postgresql`
-    host: "postgresql"
+    host: ""
     # -- postgresql Database name
     # @default -- `authentik`
-    name: "authentik"
+    name: ""
     # -- postgresql Username
     # @default -- `authentik`
-    user: "authentik"
+    user: ""
     # -- postgresql password
     password: ""
     # -- postgresql port
-    port: 5432
+    port: ""
 
 
 blueprints:
@@ -298,7 +298,15 @@ server:
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
   env:
-    - name: AUTHENTIK_POSTGRESSQL__PASSWORD
+    - name: AUTHENTIK_POSTGRESQL__HOST
+      value: "postgresql"
+    - name: AUTHENTIK_POSTGRESQL__NAME
+      value: "authentik"
+    - name: AUTHENTIK_POSTGRESQL__USER
+      value: "authentik"
+    - name: AUTHENTIK_POSTGRESQL__PORT
+      value: "5432"
+    - name: AUTHENTIK_POSTGRESQL__PASSWORD
       valueFrom:
         secretKeyRef:
           name: app-db-passwords
@@ -307,7 +315,7 @@ server:
       valueFrom:
         secretKeyRef:
           name: authentik-secret
-          key: authentik-secret-key                 
+          key: authentic-secret-key                
     # - name: AUTHENTIK_VAR_NAME
     #   value: VALUE
     # - name: AUTHENTIK_VAR_OTHER
@@ -739,7 +747,15 @@ worker:
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
   env:
-    - name: AUTHENTIK_POSTGRESSQL__PASSWORD
+    - name: AUTHENTIK_POSTGRESQL__HOST
+      value: "postgresql"
+    - name: AUTHENTIK_POSTGRESQL__NAME
+      value: "authentik"
+    - name: AUTHENTIK_POSTGRESQL__USER
+      value: "authentik"
+    - name: AUTHENTIK_POSTGRESQL__PORT
+      value: "5432"
+    - name: AUTHENTIK_POSTGRESQL__PASSWORD
       valueFrom:
         secretKeyRef:
           name: app-db-passwords
@@ -748,7 +764,7 @@ worker:
       valueFrom:
         secretKeyRef:
           name: authentik-secret
-          key: authentik-secret-key          
+          key: authentic-secret-key      
     # - name: AUTHENTIK_VAR_OTHER
     #   valueFrom:
     #     secretKeyRef:
