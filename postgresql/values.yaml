@@ -374,30 +374,15 @@ primary:
       01-create-dbs.sh: |
         #!/bin/bash
         set -e
-
-        psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "postgres" <<-EOSQL
-          DO \$\$
-          BEGIN
-            IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authentik') THEN
-              CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
-            END IF;
-          END
-          \$\$;
-
-          SELECT 'CREATE DATABASE authentik OWNER authentik'
-          WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'authentik')\gexec
-
-          DO \$\$
-          BEGIN
-            IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'guacamole') THEN
-              CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
-            END IF;
-          END
-          \$\$;
-
-          SELECT 'CREATE DATABASE guacamole OWNER guacamole'
-          WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'guacamole')\gexec
-        EOSQL
+        # Roles
+        psql -v ON_ERROR_STOP=1 -U postgres -d postgres \
+          -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='authentik') THEN CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}'; END IF; END \$\$;"
+        psql -v ON_ERROR_STOP=1 -U postgres -d postgres \
+          -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='guacamole') THEN CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}'; END IF; END \$\$;"
+        psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='authentik'" | grep -q 1 \
+          || psql -v ON_ERROR_STOP=1 -U postgres -c "CREATE DATABASE authentik OWNER authentik;"
+        psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='guacamole'" | grep -q 1 \
+          || psql -v ON_ERROR_STOP=1 -U postgres -c "CREATE DATABASE guacamole OWNER guacamole;"
 
       02-init-guac.sh: |
         #!/bin/bash
@@ -418,14 +403,11 @@ primary:
       03-grant-guac.sh: |
         #!/bin/bash
         set -e
-        psql -v ON_ERROR_STOP=1 -U "postgres" -d "guacamole" <<-EOSQL
-            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO guacamole;
-            GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO guacamole;
-            ALTER DEFAULT PRIVILEGES IN SCHEMA public
-              GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO guacamole;
-            ALTER DEFAULT PRIVILEGES IN SCHEMA public
-              GRANT USAGE, SELECT ON SEQUENCES TO guacamole;
-        EOSQL  
+        psql -v ON_ERROR_STOP=1 -U "postgres" -d "guacamole" \
+          -c "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO guacamole;" \
+          -c "GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO guacamole;" \
+          -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO guacamole;" \
+          -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO guacamole;"
   
     ## @param primary.initdb.scriptsConfigMap ConfigMap with scripts to be run at first boot
     ## NOTE: This will override `primary.initdb.scripts`
