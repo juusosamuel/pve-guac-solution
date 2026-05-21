@@ -192,7 +192,7 @@ auth:
     #metricsPasswordKey: metrics-password
   ## @param auth.usePasswordFiles Mount credentials as a files instead of using an environment variable
   ##
-  usePasswordFiles: true
+  usePasswordFiles: false
 ## @param architecture PostgreSQL architecture (`standalone` or `replication`)
 ##
 architecture: standalone
