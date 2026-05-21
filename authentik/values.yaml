@@ -315,7 +315,7 @@ server:
       valueFrom:
         secretKeyRef:
           name: authentik-secret
-          key: authentic-secret-key                
+          key: authentik-secret-key                
     # - name: AUTHENTIK_VAR_NAME
     #   value: VALUE
     # - name: AUTHENTIK_VAR_OTHER
@@ -764,7 +764,7 @@ worker:
       valueFrom:
         secretKeyRef:
           name: authentik-secret
-          key: authentic-secret-key      
+          key: authentik-secret-key      
     # - name: AUTHENTIK_VAR_OTHER
     #   valueFrom:
     #     secretKeyRef:
