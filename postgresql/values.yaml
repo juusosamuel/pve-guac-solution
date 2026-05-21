@@ -374,20 +374,46 @@ primary:
       01-create-dbs.sh: |
         #!/bin/bash
         set -e
-        
-        # Execute SQL as the postgres admin user
-        psql -v --username "postgres" --dbname "postgres" <<-EOSQL
-            CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
-            CREATE DATABASE authentik OWNER authentik;
-            
-            CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
-            CREATE DATABASE guacamole OWNER guacamole;
+
+        psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "postgres" <<-EOSQL
+          DO \$\$
+          BEGIN
+            IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authentik') THEN
+              CREATE USER authentik WITH PASSWORD '${AUTHENTIK_DB_PASSWORD}';
+            END IF;
+          END
+          \$\$;
+
+          SELECT 'CREATE DATABASE authentik OWNER authentik'
+          WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'authentik')\gexec
+
+          DO \$\$
+          BEGIN
+            IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'guacamole') THEN
+              CREATE USER guacamole WITH PASSWORD '${GUACAMOLE_DB_PASSWORD}';
+            END IF;
+          END
+          \$\$;
+
+          SELECT 'CREATE DATABASE guacamole OWNER guacamole'
+          WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'guacamole')\gexec
         EOSQL
 
       02-init-guac.sh: |
         #!/bin/bash
         set -e
-        psql -v ON_ERROR_STOP=1 -U "postgres" -d "guacamole" -f /custom-init/initdb.sql
+        
+        # Only run schema init if guacamole tables don't exist yet
+        TABLE_EXISTS=$(psql -U postgres -d guacamole -tAc \
+          "SELECT COUNT(*) FROM information_schema.tables \
+          WHERE table_schema='public' AND table_name='guacamole_user';")
+        
+        if [ "$TABLE_EXISTS" -eq "0" ]; then
+          echo "Running Guacamole schema initialization..."
+          psql -v ON_ERROR_STOP=1 -U postgres -d guacamole -f /custom-init/initdb.sql
+        else
+          echo "Guacamole schema already exists, skipping."
+        fi
 
       03-grant-guac.sh: |
         #!/bin/bash
