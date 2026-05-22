@@ -20,7 +20,8 @@ spec:
     namespace: default
   syncPolicy:
     syncOptions:
-      - ServerSideApply=true  
+      - ServerSideApply=true
+      - Replace=true
     automated:
       prune: true
       selfHeal: true
