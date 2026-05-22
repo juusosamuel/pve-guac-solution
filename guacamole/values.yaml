@@ -23,7 +23,7 @@ client:
   # Exposes the web application on port 8080
   service:
     # Service type - ClusterIP, NodePort, LoadBalancer, or ExternalName
-    type: LoadBalancer
+    type: ClusterIP
     # Port where Guacamole web interface is accessible (default: 8080)
     port: 8080
   
@@ -710,7 +710,7 @@ ingress:
   hosts:
     - host: guacamole.k3s.local
       paths:
-        - path: /
+        - path: /guacamole
           pathType: ImplementationSpecific
   tls:
     - secretName: guacamole-tls-secret
