@@ -9,7 +9,7 @@ spec:
     - repoURL: https://github.com/juusosamuel/pve-guac-solution
       targetRevision: main
       ref: values                          
-    - repoURL: https://dmunozv04.github.io/charts
+    - repoURL: https://github.com/dmunozv04/charts
       chart: guacamole
       targetRevision: 0.3.3
       helm:
