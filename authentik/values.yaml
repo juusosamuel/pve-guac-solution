@@ -574,17 +574,18 @@ server:
       # -- Prometheus [MetricsRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
       # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
+      selector:
+        release: kube-prometheus-stack
 
       # -- Prometheus ServiceMonitor scheme
       scheme: ""
       # -- Prometheus ServiceMonitor tlsConfig
       tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
-      namespace: ""
+      namespace: default
       # -- Prometheus ServiceMonitor labels
-      labels: {}
+      labels:
+        release: kube-prometheus-stack
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
@@ -987,7 +988,8 @@ worker:
       # -- Prometheus [MetricsRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
       # -- Prometheus ServiceMonitor selector
-      selector: {}
+      selector:
+        release: kube-prometheus-stack
         # prometheus: kube-prometheus
 
       # -- Prometheus ServiceMonitor scheme
@@ -995,9 +997,10 @@ worker:
       # -- Prometheus ServiceMonitor tlsConfig
       tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
-      namespace: ""
+      namespace: default
       # -- Prometheus ServiceMonitor labels
-      labels: {}
+      labels:
+        release: kube-prometheus-stack
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
