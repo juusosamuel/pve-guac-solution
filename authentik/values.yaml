@@ -592,7 +592,8 @@ server:
     # -- enable an ingress resource for the authentik server
     enabled: true
     # -- additional ingress annotations
-    annotations: {}
+    annotations:
+      - cert-manager.io/cluster-issuer: selfsigned-issuer
     # -- additional ingress labels
     labels: {}
     # -- defines which ingress controller will implement the resource
@@ -618,10 +619,10 @@ server:
       #         name: use-annotation
 
     # -- ingress TLS configuration
-    tls: []
-      # - secretName: authentik-tls
-      #   hosts:
-      #     - authentik.domain.tld
+    tls:
+      - secretName: authentik-tls
+        hosts:
+          - authentik.k3s.local
 
     # -- uses `server.service.servicePortHttps` instead of `server.service.servicePortHttp`
     https: false
