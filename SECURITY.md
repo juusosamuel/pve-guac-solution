@@ -1,0 +1,1 @@
+Create Kubernetes secrets to use for PG passwords, Authentik secret key. Guacamole initdb schema creates an admin user guacadmin, change the password on first login.
