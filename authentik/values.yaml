@@ -593,7 +593,7 @@ server:
     enabled: true
     # -- additional ingress annotations
     annotations:
-      - cert-manager.io/cluster-issuer: selfsigned-issuer
+      cert-manager.io/cluster-issuer: selfsigned-issuer
     # -- additional ingress labels
     labels: {}
     # -- defines which ingress controller will implement the resource
