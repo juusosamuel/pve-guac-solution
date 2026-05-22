@@ -703,19 +703,19 @@ securityContext: {}
 # Only applies to the client service - guacd should not be exposed externally
 # More information: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: false
-  className: "traefik"
+  enabled: true
+  className: traefik
   annotations:
     cert-manager.io/cluster-issuer: "selfsigned-issuer"
   hosts:
-    - host: guacamole.k3s.fi
+    - host: guacamole.k3s.local
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: guacamole-tls-secret
       hosts:
-        - guacamole.k3s.fi
+        - guacamole.k3s.local
 
 # -- Expose the guacamole client via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
