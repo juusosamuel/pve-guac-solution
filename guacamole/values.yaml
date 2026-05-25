@@ -241,9 +241,9 @@ client:
     # SAML authentication
     # Single Sign-On authentication with SAML Identity Providers
     saml:
-      enabled: false
+      enabled: true
       # SAML_IDP_METADATA_URL: URI of SAML IdP metadata file (local file or remote URL)
-      idpMetadataUrl: ""
+      idpMetadataUrl: "https://authentik.k3s.local/application/saml/guacamole/metadata"
       # SAML_IDP_URL: URL of Identity Provider for user redirection (required if not in metadata)
       idpUrl: ""
       # SAML_ENTITY_ID: SAML Entity Identifier for this Guacamole instance (required if not in metadata)
