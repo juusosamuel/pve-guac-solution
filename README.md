@@ -11,7 +11,7 @@ This repository is designed around GitOps principles:
 
 Components
 
-The current setup includes (at minimum):
+The current setup includes:
 
     authentik (SSO / identity provider)
     Apache Guacamole (remote desktop gateway)
@@ -35,12 +35,12 @@ Repository layout
 
 Prerequisites
 
-    A Kubernetes cluster (often used with k3s, but any conformant cluster should work)
+    A Kubernetes cluster to deploy on
     Argo CD installed in the cluster
-    An ingress controller installed (examples assume Traefik)
-    cert-manager installed (optional but recommended)
+    An ingress controller installed (examples assume k3s default Traefik)
+    cert-manager installed
 
-How it works (high level)
+How it works
 
     Argo CD reads the Application manifests under argocd/.
     Each application pulls:
