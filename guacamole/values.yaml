@@ -253,7 +253,7 @@ client:
       
       # Optional SAML configuration
       # SAML_STRICT: Enable strict security checks on servers and certificates (true/false, default: true)
-      strict: "true"
+      strict: "false"
       # SAML_COMPRESS_REQUEST: Enable compression on requests to IdP (true/false, default: true)
       compressRequest: "true"
       # SAML_COMPRESS_RESPONSE: Request compressed responses from IdP (true/false, default: true)
