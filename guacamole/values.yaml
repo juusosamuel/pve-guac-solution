@@ -249,7 +249,7 @@ client:
       # SAML_ENTITY_ID: SAML Entity Identifier for this Guacamole instance (required if not in metadata)
       entityId: "https://guacamole.k3s.local/guacamole/"
       # SAML_CALLBACK_URL: Callback URL for IdP to redirect users back to Guacamole (required if not in metadata)
-      callbackUrl: "https://guacamole.k3s.local/guacamole/api/ext/saml/callback"
+      callbackUrl: "https://guacamole.k3s.local/guacamole"
       
       # Optional SAML configuration
       # SAML_STRICT: Enable strict security checks on servers and certificates (true/false, default: true)
