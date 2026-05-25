@@ -245,11 +245,11 @@ client:
       # SAML_IDP_METADATA_URL: URI of SAML IdP metadata file (local file or remote URL)
       idpMetadataUrl: "http://authentik.k3s.local/api/v3/providers/saml/2/metadata/?download"
       # SAML_IDP_URL: URL of Identity Provider for user redirection (required if not in metadata)
-      idpUrl: ""
+      idpUrl: "https://authentik.k3s.local/application/saml/guacamole/sso/binding/redirect/"
       # SAML_ENTITY_ID: SAML Entity Identifier for this Guacamole instance (required if not in metadata)
       entityId: "https://guacamole.k3s.local/guacamole/"
       # SAML_CALLBACK_URL: Callback URL for IdP to redirect users back to Guacamole (required if not in metadata)
-      callbackUrl: ""
+      callbackUrl: "https://guacamole.k3s.local/guacamole/api/ext/saml/callback"
       
       # Optional SAML configuration
       # SAML_STRICT: Enable strict security checks on servers and certificates (true/false, default: true)
