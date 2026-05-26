@@ -1,0 +1,49 @@
+config:
+  # required: Set to your actual API server URL(s). Can be one, or multiple separated by commas
+  endpoints: ${PROXMOX_HOST}
+
+  # required: A Proxmox API token and token-ID. Needs to have at least the PVEAuditor role
+  token: ${PROXMOX_TOKEN}
+  tokenID: ${PROXMOX_TOKEN_ID}
+
+  # optional: Set to 'true' if the API server's TLS can not be verified
+  api_insecure: 'true'
+
+  # optional: Set to 'debug' for more logs
+  log_level: 'info'
+
+  # optional: If you change this, change the service.port value too
+  port: '8080'
+
+env:
+  - name: PROXMOX_HOST
+    valueFrom:
+      secretKeyRef:
+        name: proxmox-secret
+        key: host
+  - name: PROXMOX_TOKEN_ID
+    valueFrom:
+      secretKeyRef:
+        name: proxmox-secret
+        key: uuid                
+  - name: PROXMOX_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: proxmox-secret
+        key: token
+
+# optional: creates a ServiceMonitor that targets this exporter's service -- for use with the kube-prometheus operator
+serviceMonitor:
+  enabled: true
+  ## The label to use to retrieve the job name from.
+  ## jobLabel: "app.kubernetes.io/name"
+  additionalLabels:
+    release: kube-prometheus-stack
+  annotations: {}
+  targetLabels: []
+  relabelings: []
+  metricRelabelings: []
+
+# optional: creates a PrometheusRule with some basic alerts for proxmox clusters -- for use with the kube-prometheus operator
+prometheusRule:
+  enabled: false
