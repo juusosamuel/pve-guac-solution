@@ -15,22 +15,22 @@ config:
   # optional: If you change this, change the service.port value too
   port: '8080'
 
-env:
-  - name: PROXMOX_HOST
-    valueFrom:
-      secretKeyRef:
-        name: proxmox-secret
-        key: host
-  - name: PROXMOX_TOKEN_ID
-    valueFrom:
-      secretKeyRef:
-        name: proxmox-secret
-        key: uuid                
-  - name: PROXMOX_TOKEN
-    valueFrom:
-      secretKeyRef:
-        name: proxmox-secret
-        key: token
+  extraEnv:
+    - name: PROXMOX_HOST
+      valueFrom:
+        secretKeyRef:
+          name: proxmox-secret
+          key: host
+    - name: PROXMOX_TOKEN_ID
+      valueFrom:
+        secretKeyRef:
+          name: proxmox-secret
+          key: uuid                
+    - name: PROXMOX_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: proxmox-secret
+          key: token
 
 # optional: creates a ServiceMonitor that targets this exporter's service -- for use with the kube-prometheus operator
 serviceMonitor:
