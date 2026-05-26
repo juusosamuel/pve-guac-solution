@@ -18,6 +18,7 @@ The current setup includes:
     PostgreSQL (datastore for Guacamole + authentik)
     kube-prometheus-stack (monitoring)
     cert-manager (TLS issuers and certificate automation)
+    Proxmox Virtual Environment (virtualization layer)
 
 Deployments are defined as Argo CD Application manifests in argocd/.
 Repository layout
