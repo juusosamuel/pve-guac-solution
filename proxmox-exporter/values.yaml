@@ -1,10 +1,10 @@
 config:
   # required: Set to your actual API server URL(s). Can be one, or multiple separated by commas
-  endpoints: ${PROXMOX_HOST}
+  endpoints: ${PROXMOX_EXPORTER_PROXMOX_ENDPOINTS}
 
   # required: A Proxmox API token and token-ID. Needs to have at least the PVEAuditor role
-  token: ${PROXMOX_TOKEN}
-  tokenID: ${PROXMOX_TOKEN_ID}
+  token: ${PROXMOX_EXPORTER_PROXMOX_TOKEN}
+  tokenID: ${PROXMOX_EXPORTER_PROXMOX_TOKEN_ID}
 
   # optional: Set to 'true' if the API server's TLS can not be verified
   api_insecure: 'true'
@@ -15,18 +15,18 @@ config:
   # optional: If you change this, change the service.port value too
   port: '8080'
 
-  extraEnv:
-    - name: PROXMOX_HOST
+  env:
+    - name: PROXMOX_EXPORTER_PROXMOX_ENDPOINTS
       valueFrom:
         secretKeyRef:
           name: proxmox-secret
           key: host
-    - name: PROXMOX_TOKEN_ID
+    - name: PROXMOX_EXPORTER_PROXMOX_TOKEN_ID
       valueFrom:
         secretKeyRef:
           name: proxmox-secret
           key: uuid                
-    - name: PROXMOX_TOKEN
+    - name: PROXMOX_EXPORTER_PROXMOX_TOKEN
       valueFrom:
         secretKeyRef:
           name: proxmox-secret
