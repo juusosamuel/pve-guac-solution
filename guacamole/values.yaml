@@ -518,7 +518,7 @@ client:
     # EXTENSION_PRIORITY: Comma-separated list of extension namespaces in load order
     # Use "*" to represent all unlisted extensions
     # Example: "saml, *, postgresql" loads SAML first, then others, then PostgreSQL last
-    order: "*, saml, ldap"
+    order: "ldap, saml"
 
   # History Recording Storage Extension
   # Enables viewing historical session recordings from within the Guacamole web interface
