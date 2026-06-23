@@ -80,13 +80,13 @@ client:
       # POSTGRESQL_ABSOLUTE_MAX_CONNECTIONS: Absolute maximum concurrent connections across all users (0 = unlimited)
       absoluteMaxConnections: ""
       # POSTGRESQL_DEFAULT_MAX_CONNECTIONS: Default max connections per Guacamole connection (0 = unlimited)
-      defaultMaxConnections: "1"
+      defaultMaxConnections: ""
       # POSTGRESQL_DEFAULT_MAX_GROUP_CONNECTIONS: Default max connections per connection group (0 = unlimited)
       defaultMaxGroupConnections: ""
       # POSTGRESQL_DEFAULT_MAX_CONNECTIONS_PER_USER: Default max connections per user per connection (0 = unlimited)
-      defaultMaxConnectionsPerUser: "1"
+      defaultMaxConnectionsPerUser: ""
       # POSTGRESQL_DEFAULT_MAX_GROUP_CONNECTIONS_PER_USER: Default max connections per user per group (default: 1)
-      defaultMaxGroupConnectionsPerUser: "1"
+      defaultMaxGroupConnectionsPerUser: ""
       # POSTGRESQL_AUTO_CREATE_ACCOUNTS: Auto-create accounts for users authenticated by other modules (true/false)
       autoCreateAccounts: "true"
       # POSTGRESQL_DEFAULT_STATEMENT_TIMEOUT: Timeout for database queries in seconds (0 = disabled)
