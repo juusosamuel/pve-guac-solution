@@ -189,19 +189,19 @@ client:
     # LDAP authentication backend
     # Requires network access to an LDAP directory
     ldap:
-      enabled: false
+      enabled: true
       # LDAP_HOSTNAME: Hostname or IP address of LDAP server (required)
-      hostname: ""
+      hostname: "ak-outpost-ldap-outpost.authentik.svc.cluster.local"
       # LDAP_PORT: Port for LDAP connection (default: 389 for LDAP/STARTTLS, 636 for LDAPS)
       port: ""
       # LDAP_ENCRYPTION_METHOD: Encryption method - "none", "ssl", or "starttls"
-      encryptionMethod: ""
+      encryptionMethod: "none"  #testing
       # LDAP_USER_BASE_DN: Base DN for all Guacamole users (required)
-      userBaseDn: ""
+      userBaseDn: "ou=users,DC=ldap,DC=goauthentik,DC=io"
       
       # Optional LDAP configuration
       # LDAP_GROUP_BASE_DN: Base DN for groups (required for seeAlso attribute support)
-      groupBaseDn: ""
+      groupBaseDn: "ou=groups,DC=ldap,DC=goauthentik,DC=io"
       # LDAP_GROUP_SEARCH_FILTER: Search filter for groups (default: "(objectClass=*)")
       groupSearchFilter: ""
       # LDAP_GROUP_NAME_ATTRIBUTE: Attribute defining group names (default: "cn")
@@ -211,13 +211,13 @@ client:
       # LDAP_MEMBER_ATTRIBUTE_TYPE: Member identification type - "dn" or "uid" (default: "dn")
       memberAttributeType: ""
       # LDAP_SEARCH_BIND_DN: DN to bind as when searching for users
-      searchBindDn: ""
+      searchBindDn: "cn=ldapservice,ou=users,DC=ldap,DC=goauthentik,DC=io"
       # LDAP_SEARCH_BIND_PASSWORD: Password for search bind DN
       searchBindPassword: ""
       # LDAP_USERNAME_ATTRIBUTE: Attribute containing usernames (default: "uid")
-      usernameAttribute: ""
+      usernameAttribute: "cn"
       # LDAP_USER_ATTRIBUTES: Attributes to retrieve for parameter tokens (comma-separated)
-      userAttributes: ""
+      userAttributes: "mail,cn,displayName"
       # LDAP_CONFIG_BASE_DN: Base DN for Guacamole configurations
       configBaseDn: ""
       # LDAP_DEREFERENCE_ALIASES: Alias dereferencing - "never", "searching", "finding", "always" (default: "never")
@@ -421,7 +421,12 @@ client:
       valueFrom:
         secretKeyRef:
           name: app-db-passwords
-          key: guacamole-postgres-password   
+          key: guacamole-postgres-password
+    - name: LDAP_SEARCH_BIND_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: ldap-sa-password
+          key: ldap-sa-password       
 
   # Brute-force authentication detection (available since Guacamole 1.6.0)
   # Detects and blocks brute-force login attacks by tracking failed authentication attempts
@@ -513,7 +518,7 @@ client:
     # EXTENSION_PRIORITY: Comma-separated list of extension namespaces in load order
     # Use "*" to represent all unlisted extensions
     # Example: "saml, *, postgresql" loads SAML first, then others, then PostgreSQL last
-    order: "*, saml"
+    order: "*, saml, ldap"
 
   # History Recording Storage Extension
   # Enables viewing historical session recordings from within the Guacamole web interface
